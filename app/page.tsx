@@ -22,6 +22,12 @@ interface EnemyBullet {
   y: number
 }
 
+/** Deterministic 0..1 from index — same on server and client (no Math.random() in render). */
+function starField01(index: number, salt: number): number {
+  const x = Math.sin(index * 12.9898 + salt * 43758.5453) * 43758.5453
+  return x - Math.floor(x)
+}
+
 export default function SpaceInvaderGame() {
   const [playerX, setPlayerX] = useState(145)
   const [bullets, setBullets] = useState<Bullet[]>([])
@@ -310,10 +316,10 @@ export default function SpaceInvaderGame() {
                       key={i}
                       className="absolute w-1 h-1 bg-white rounded-full animate-pulse"
                       style={{
-                        left: `${Math.random() * 100}%`,
-                        top: `${Math.random() * 100}%`,
-                        animationDelay: `${Math.random() * 2}s`,
-                        opacity: Math.random() * 0.7 + 0.3,
+                        left: `${starField01(i, 1) * 100}%`,
+                        top: `${starField01(i, 2) * 100}%`,
+                        animationDelay: `${starField01(i, 3) * 2}s`,
+                        opacity: starField01(i, 4) * 0.7 + 0.3,
                       }}
                     />
                   ))}
